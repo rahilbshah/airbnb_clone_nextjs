@@ -7,14 +7,14 @@ import MenuItem from './MenuItem';
 import { useRouter } from 'next/navigation';
 import useRegisterModal from '@/hooks/useRegisterModal';
 import useLoginModal from '@/hooks/useLoginModal';
+import { SafeUser } from '@/types';
 interface UserMenuProps {
-  currentUser?: null;
+  currentUser?: SafeUser | null;
 }
 const UserMenu = ({ currentUser }: UserMenuProps) => {
   const router = useRouter();
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
-
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = useCallback(() => {

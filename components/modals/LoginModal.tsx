@@ -10,6 +10,8 @@ import { AiFillGithub } from 'react-icons/ai';
 import Input from '../inputs/Input';
 import Heading from '../Heading';
 import Modal from './Modal';
+import { signIn } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 const LoginModal = () => {
   const router = useRouter();
@@ -27,7 +29,31 @@ const LoginModal = () => {
       password: '',
     },
   });
-  const onSubmit: SubmitHandler<FieldValues> = data => {};
+  const onSubmit: SubmitHandler<FieldValues> = async data => {
+    setIsLoading(true);
+    try {
+      const callback = await signIn('credentials', {
+        ...data,
+        redirect: false,
+      });
+
+      setIsLoading(false);
+
+      if (callback?.ok) {
+        toast.success('Logged in');
+        router.refresh();
+        loginModal.onClose();
+      }
+
+      if (callback?.error) {
+        toast.error(callback.error);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error during sign in:', error);
+      toast.error('An error occurred during sign in.');
+    }
+  };
   const onToggle = useCallback(() => {
     loginModal.onClose();
     registerModal.onOpen();

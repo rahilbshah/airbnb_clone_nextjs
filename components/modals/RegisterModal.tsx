@@ -10,6 +10,8 @@ import Input from '../inputs/Input';
 import Heading from '../Heading';
 import Modal from './Modal';
 import useLoginModal from '@/hooks/useLoginModal';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
@@ -19,6 +21,7 @@ const RegisterModal = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
@@ -27,7 +30,22 @@ const RegisterModal = () => {
       password: '',
     },
   });
-  const onSubmit: SubmitHandler<FieldValues> = data => {};
+  const onSubmit: SubmitHandler<FieldValues> = async data => {
+    setIsLoading(true);
+    try {
+      const res = await axios.post('/api/register', data);
+      if (res.status === 201) {
+        toast.success('Registered!');
+        registerModal.onClose();
+        loginModal.onOpen();
+      }
+      setIsLoading(false);
+      reset();
+    } catch (error: any) {
+      toast.error(error);
+      setIsLoading(false);
+    }
+  };
 
   const onToggle = useCallback(() => {
     registerModal.onClose();
