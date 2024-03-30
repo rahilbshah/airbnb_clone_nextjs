@@ -21,7 +21,6 @@ const getReservations = async (params: IParams) => {
     if (authorId) {
       query.listing = { userId: authorId };
     }
-    console.log(query);
     const reservations = await client.reservation.findMany({
       where: query,
       include: {

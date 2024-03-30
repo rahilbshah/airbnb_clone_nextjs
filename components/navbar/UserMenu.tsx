@@ -10,6 +10,7 @@ import useLoginModal from '@/hooks/useLoginModal';
 import { SafeUser } from '@/types';
 import { signOut } from 'next-auth/react';
 import useRentModal from '@/hooks/useRentModal';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 interface UserMenuProps {
   currentUser?: SafeUser | null;
 }
@@ -31,8 +32,9 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
 
     rentModal.onOpen();
   }, [loginModal, currentUser, rentModal]);
+  useOutsideClick('#usermenu', () => setIsOpen(false));
   return (
-    <div className="relative">
+    <div id="usermenu" className="relative">
       <div className="flex items-center gap-3">
         <div
           onClick={onRent}

@@ -21,7 +21,6 @@ const ListingPage = async ({ params }: { params: IParams }) => {
       </ClientOnly>
     );
   }
-  console.log(reservations);
   return (
     <ClientOnly>
       <ListingClient
