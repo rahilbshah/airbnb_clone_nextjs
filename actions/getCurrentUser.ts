@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth';
 export const getSession = async () => {
   return await getServerSession(authOptions);
 };
-export const getCurrentUser = async () => {
+const getCurrentUser = async () => {
   try {
     const session = await getSession();
     if (!session?.user?.email) return null;
@@ -27,3 +27,5 @@ export const getCurrentUser = async () => {
     return null;
   }
 };
+
+export default getCurrentUser;

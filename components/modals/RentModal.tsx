@@ -12,6 +12,9 @@ import CountrySelect from '../inputs/CountrySelect';
 import dynamic from 'next/dynamic';
 import Counter from '../inputs/Counter';
 import ImageUpload from '../inputs/ImageUpload';
+import Input from '../inputs/Input';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
 enum STEPS {
   CATEGORY = 0,
@@ -79,12 +82,29 @@ const RentModal = () => {
   const onNext = () => {
     setStep(value => value + 1);
   };
-  const onSubmit: SubmitHandler<FieldValues> = data => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FieldValues> = async data => {
     if (step !== STEPS.PRICE) {
       return onNext();
     }
+
+    setIsLoading(true);
+    try {
+      const res = await axios.post('/api/listings', data);
+      if (res.status === 201) {
+        toast.success('Listing created!');
+        router.refresh();
+        reset();
+        setStep(STEPS.CATEGORY);
+        rentModal.onClose();
+      }
+    } catch (error: any) {
+      console.log(error.response);
+      toast.error(error.response.data);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   const actionLabel = useMemo(() => {
     if (step === STEPS.PRICE) {
       return 'Create';
@@ -123,7 +143,6 @@ const RentModal = () => {
       </div>
     </div>
   );
-  // console.log(watch());
   if (step === STEPS.LOCATION) {
     bodyContent = (
       <div className="flex flex-col gap-8">
@@ -180,6 +199,54 @@ const RentModal = () => {
         <ImageUpload
           onChange={value => setCustomValue('imageSrc', value)}
           value={imageSrc}
+        />
+      </div>
+    );
+  }
+  if (step === STEPS.DESCRIPTION) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="How would you describe your place?"
+          subtitle="Short and sweet works best!"
+        />
+        <Input
+          id="title"
+          label="Title"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
+        <hr />
+        <Input
+          id="description"
+          label="Description"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.PRICE) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Now, set your price"
+          subtitle="How much do you charge per night?"
+        />
+        <Input
+          id="price"
+          label="Price"
+          formatPrice
+          type="number"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
         />
       </div>
     );
