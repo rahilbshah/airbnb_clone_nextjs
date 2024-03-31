@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { RefObject, useMemo, useRef, useState } from 'react';
 import Modal from './Modal';
 import { useRouter } from 'next/navigation';
 import useRentModal from '@/hooks/useRentModal';
@@ -15,6 +15,7 @@ import ImageUpload from '../inputs/ImageUpload';
 import Input from '../inputs/Input';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 enum STEPS {
   CATEGORY = 0,
@@ -27,6 +28,7 @@ enum STEPS {
 const RentModal = () => {
   const router = useRouter();
   const rentModal = useRentModal();
+  const modalRef: RefObject<HTMLDivElement> = useRef(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(STEPS.CATEGORY);
@@ -251,6 +253,7 @@ const RentModal = () => {
       </div>
     );
   }
+  useOutsideClick('#rent', rentModal.onClose, modalRef);
   return (
     <Modal
       disabled={isLoading}
@@ -262,6 +265,7 @@ const RentModal = () => {
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
       onClose={rentModal.onClose}
       body={bodyContent}
+      modalRef={modalRef}
     />
   );
 };

@@ -1,15 +1,27 @@
+import { RefObject } from 'react';
 import { useEvent } from './useEvent';
 
-export const useOutsideClick = (elementId: string, handler: any) => {
+export const useOutsideClick = (
+  elementId: string,
+  handler: () => void,
+  modalRef?: RefObject<HTMLDivElement>,
+) => {
   const onClickOutside = (event: any) => {
     const element = document.querySelector(elementId);
     const targetElement = event.target;
 
     // Check if the clicked element is not the particular element or its descendants
     if (!element?.contains(targetElement)) {
-      // User clicked outside of the particular element
-      if (handler) handler();
+      // If modalRef is provided, also check if the clicked target is outside modalRef
+      if (
+        !modalRef ||
+        (modalRef.current && !modalRef.current.contains(targetElement))
+      ) {
+        handler(); // Call the handler if clicked outside both elementId and modalRef
+      }
     }
   };
-  useEvent('click', onClickOutside);
+
+  // Listen for clicks using useEvent hook
+  useEvent('mousedown', onClickOutside);
 };

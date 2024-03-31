@@ -38,6 +38,7 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
       <div className="flex items-center gap-3">
         <div
           onClick={onRent}
+          id="rent"
           className="hidden md:block text-sm  font-semibold  py-3  px-4  rounded-full  hover:bg-neutral-100  transition  cursor-pointer"
         >
           Airbnb your home
@@ -73,14 +74,26 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
                   label="My properties"
                   onClick={() => router.push('/properties')}
                 />
-                <MenuItem label="Airbnb your home" onClick={rentModal.onOpen} />
+                <MenuItem
+                  id="rent"
+                  label="Airbnb your home"
+                  onClick={rentModal.onOpen}
+                />
                 <hr />
                 <MenuItem label="Logout" onClick={() => signOut()} />
               </>
             ) : (
               <>
-                <MenuItem label="Login" onClick={loginModal.onOpen} />
-                <MenuItem label="Sign up" onClick={registerModal.onOpen} />
+                <MenuItem
+                  id="login"
+                  label="Login"
+                  onClick={loginModal.onOpen}
+                />
+                <MenuItem
+                  id="register"
+                  label="Sign up"
+                  onClick={registerModal.onOpen}
+                />
               </>
             )}
           </div>

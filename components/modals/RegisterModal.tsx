@@ -1,7 +1,7 @@
 'use client';
 
 import useRegisterModal from '@/hooks/useRegisterModal';
-import { useCallback, useState } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Button from '../Button';
 import { FcGoogle } from 'react-icons/fc';
@@ -13,11 +13,13 @@ import useLoginModal from '@/hooks/useLoginModal';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
+  const modalRef: RefObject<HTMLDivElement> = useRef(null);
 
   const {
     register,
@@ -113,6 +115,7 @@ const RegisterModal = () => {
       </div>
     </div>
   );
+  useOutsideClick('#register', registerModal.onClose, modalRef);
   return (
     <Modal
       isOpen={registerModal.isOpen}
@@ -123,6 +126,7 @@ const RegisterModal = () => {
       onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}
       footer={footerContent}
+      modalRef={modalRef}
     />
   );
 };

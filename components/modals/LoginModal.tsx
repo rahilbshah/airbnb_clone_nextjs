@@ -2,7 +2,7 @@
 import useLoginModal from '@/hooks/useLoginModal';
 import useRegisterModal from '@/hooks/useRegisterModal';
 import { useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Button from '../Button';
 import { FcGoogle } from 'react-icons/fc';
@@ -12,13 +12,14 @@ import Heading from '../Heading';
 import Modal from './Modal';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 const LoginModal = () => {
   const router = useRouter();
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [isLoading, setIsLoading] = useState(false);
-
+  const modalRef: RefObject<HTMLDivElement> = useRef(null);
   const {
     register,
     handleSubmit,
@@ -118,9 +119,11 @@ const LoginModal = () => {
       </div>
     </div>
   );
+  useOutsideClick('#login', loginModal.onClose, modalRef);
   return (
     <Modal
       isOpen={loginModal.isOpen}
+      modalRef={modalRef}
       actionLabel="Continue"
       onClose={loginModal.onClose}
       title="Login"

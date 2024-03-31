@@ -1,7 +1,13 @@
 'use client';
 
 import qs from 'query-string';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {
+  RefObject,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Modal from './Modal';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useSearchModal from '@/hooks/useSearchModal';
@@ -12,6 +18,7 @@ import Heading from '../Heading';
 import Calendar from '../inputs/Calendar';
 import Counter from '../inputs/Counter';
 import { formatISO } from 'date-fns';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 enum STEPS {
   LOCATION = 0,
@@ -22,6 +29,7 @@ const SearchModal = () => {
   const router = useRouter();
   const searchModal = useSearchModal();
   const params = useSearchParams();
+  const modalRef: RefObject<HTMLDivElement> = useRef(null);
 
   const [step, setStep] = useState(STEPS.LOCATION);
 
@@ -170,6 +178,7 @@ const SearchModal = () => {
       </div>
     );
   }
+  useOutsideClick('#search', searchModal.onClose, modalRef);
 
   return (
     <Modal
@@ -181,6 +190,7 @@ const SearchModal = () => {
       secondaryAction={step === STEPS.LOCATION ? undefined : onBack}
       onClose={searchModal.onClose}
       body={bodyContent}
+      modalRef={modalRef}
     />
   );
 };
