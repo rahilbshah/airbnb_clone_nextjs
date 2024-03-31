@@ -4,19 +4,23 @@ import { useRouter } from 'next/navigation';
 
 import Button from './Button';
 import Heading from './Heading';
+import useLoginModal from '@/hooks/useLoginModal';
 
 interface EmptyStateProps {
   title?: string;
   subtitle?: string;
   showReset?: boolean;
+  showLogin?: boolean;
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({
   title = 'No exact matches',
   subtitle = 'Try changing or removing some of your filters.',
   showReset,
+  showLogin,
 }) => {
   const router = useRouter();
+  const loginModal = useLoginModal();
 
   return (
     <div className=" h-[60vh] flex  flex-col  gap-2  justify-center  items-center">
@@ -28,6 +32,9 @@ const EmptyState: React.FC<EmptyStateProps> = ({
             label="Remove all filters"
             onClick={() => router.push('/')}
           />
+        )}
+        {showLogin && (
+          <Button outline label="Login" onClick={loginModal.onOpen} />
         )}
       </div>
     </div>

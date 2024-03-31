@@ -11,7 +11,11 @@ const TripsPage = async () => {
   if (!currentUser) {
     return (
       <ClientOnly>
-        <EmptyState title="Unauthorized" subtitle="Please login" />
+        <EmptyState
+          title="Oops! Looks Like You Need Access"
+          showLogin
+          subtitle="To view this content, please log in or sign up."
+        />
       </ClientOnly>
     );
   }

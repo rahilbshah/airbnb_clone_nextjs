@@ -5,9 +5,19 @@ import ClientOnly from '@/components/ClientOnly';
 import EmptyState from '@/components/EmptyState';
 
 const FavoritePage = async () => {
-  const listings = await getFavoriteListings();
   const currentUser = await getCurrentUser();
-
+  if (!currentUser) {
+    return (
+      <ClientOnly>
+        <EmptyState
+          title="Oops! Looks Like You Need Access"
+          showLogin
+          subtitle="To view this content, please log in or sign up."
+        />
+      </ClientOnly>
+    );
+  }
+  const listings = await getFavoriteListings();
   if (listings.length === 0) {
     return (
       <ClientOnly>

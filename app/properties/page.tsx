@@ -8,7 +8,15 @@ const PropertiesPage = async () => {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return <EmptyState title="Unauthorized" subtitle="Please login" />;
+    return (
+      <ClientOnly>
+        <EmptyState
+          title="Oops! Looks Like You Need Access"
+          showLogin
+          subtitle="To view this content, please log in or sign up."
+        />
+      </ClientOnly>
+    );
   }
 
   const listings = await getListings({ userId: currentUser.id });
